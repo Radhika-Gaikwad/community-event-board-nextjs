@@ -2,11 +2,12 @@
   "name": "events-board",
   "version": "0.1.0",
   "private": true,
-  "scripts": {
+   "scripts": {
     "dev": "next dev --turbopack",
-    "build": "next build --turbopack",
+    "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "next lint",
+    "seed": "node --env-file=.env.local scripts/seed.js"
   },
   "dependencies": {
     "bcryptjs": "^3.0.3",
