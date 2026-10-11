@@ -529,6 +529,24 @@ input {
   font-weight: 700;
 }
 
+.admin-toast {
+  position: fixed;
+  z-index: 20;
+  top: 78px;
+  right: max(20px, calc((100vw - 1152px) / 2));
+  max-width: min(440px, calc(100vw - 32px));
+  padding: 13px 17px;
+  border: 1px solid #b7dec7;
+  border-left: 4px solid #17814f;
+  border-radius: 5px;
+  background: #f0fbf4;
+  box-shadow: 0 12px 28px #163d2b20;
+  color: #155c39;
+  font-size: 13px;
+  font-weight: 650;
+  animation: auth-toast-enter 180ms ease-out both;
+}
+
 @media (max-width: 760px) {
   .home-page {
     padding: 0 6%;
@@ -623,6 +641,11 @@ input {
   .auth-note {
     right: 8%;
     bottom: 15px;
+  }
+
+  .admin-toast {
+    top: 68px;
+    right: 16px;
   }
 }
 
