@@ -75,7 +75,7 @@ Auth works with an httpOnly cookie (web) or an `Authorization: Bearer <token>` h
 | GET | `/api/events` | none | List active upcoming events, nearest first; supports `category`, `city`, `q`, `page`, and `limit` together |
 | POST | `/api/events` | admin | Create an event |
 | PATCH | `/api/events/:id/status` | admin | Set `isActive` to `true` or `false`; events are not deleted |
-| GET | `/api/admin/events` | admin | List events for the admin table, including inactive and past events |
+| GET | `/api/admin/events` | admin | List and search all events; supports `q`, `status`, `sort`, `order`, `page`, and `limit` |
 | GET | `/api/cities` | none | List cities with active upcoming events for the filter dropdown |
 
 Example:
@@ -90,7 +90,7 @@ curl -X POST http://localhost:3000/api/auth/login \
 app/
   api/auth/        signup, login, logout, me
    api/events/      public list, admin create, status update
-   api/admin/       admin event list
+   api/admin/       searchable, sortable, paginated admin event list
    api/cities/      public event cities
   login/ signup/   auth pages
    admin/           event table and add-event page (middleware protected)
@@ -112,7 +112,7 @@ middleware.js      protects /admin pages
 Passwords are hashed with bcrypt (10 rounds) before saving, so the real password is never stored, and the hash is hidden from normal queries. Login returns a JWT signed with a secret from `.env`, set as an httpOnly cookie for the web and also accepted as a Bearer token for mobile. Admin pages are checked by middleware, and each admin API checks the user's role with `requireUser(req, "admin")` on the server.
 
 **How do the event filters work together?**
-The events API adds category, city, and text search to one database filter, so all selected conditions must match. It returns only active future events, sorted by start time, with bounded page and limit parameters. The browser resets to the first page when a filter changes and debounces text search.
+The public events API combines category, city, and text search in one database filter, returning only active upcoming events in date order. The admin list has URL-backed search, status filtering, sortable columns, and pagination, with five rows per page by default. Its responsive add form groups fields, marks required values, scrolls internally with fixed save actions, and confirms creation with a toast while showing the new event first.
 
 **Where were AI tools used?**
 Claude (Anthropic) was used for project planning and initial Day 1 setup/auth guidance. GitHub Copilot was used during Day 2 to help implement and review the event APIs, admin and visitor pages, filters, and pagination, and to update auth feedback and documentation. I reviewed and tested the generated changes and can explain the submitted code.
@@ -120,6 +120,6 @@ Claude (Anthropic) was used for project planning and initial Day 1 setup/auth gu
 ## What's left
 - Day 3: favourite-category preferences, My Feed, and Remind me persistence.
 - Day 4: event card themes, stickers, live preview, and saved design.
-- Day 5/submission: complete remaining polish, record the 3–4 minute phone/laptop walkthrough, and ensure the final changes are committed and pushed.
+- Day 5/submission: complete remaining polish and record the 3–4 minute phone/laptop walkthrough with a short explanation of code choices.
 
-Day 2 changes are currently local until committed and pushed. The admin email/password above are seed defaults; update them in `.env.local` for a private deployment.
+Day 1–2 implementation is committed and pushed to `main`. The admin email/password above are seed defaults; change them in `.env.local` for a private deployment.
