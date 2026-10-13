@@ -1,7 +1,7 @@
 # Community Events Board
 
 A small app where an admin posts local events and visitors browse them.
-Built with Next.js (App Router) for an assignment. Day 1 authentication and Day 2 event management/listing are implemented.
+Built with Next.js (App Router) for an assignment. Day 1 authentication, Day 2 event management/listing, and Day 3 favourites, feed, and reminders are implemented.
 
 ## Tech stack
 - Next.js 15 (App Router, JavaScript)
@@ -72,7 +72,11 @@ Auth works with an httpOnly cookie (web) or an `Authorization: Bearer <token>` h
 | POST | `/api/auth/login` | none | Log in. Returns `{ token, user }` |
 | POST | `/api/auth/logout` | none | Clears the login cookie |
 | GET | `/api/auth/me` | logged in | Returns the current user |
+| GET, PUT | `/api/favourites` | logged in | Read or replace the user's favourite event categories |
+| GET | `/api/feed` | logged in | Paginated active upcoming events matching favourite categories |
 | GET | `/api/events` | none | List active upcoming events, nearest first; supports `category`, `city`, `q`, `page`, and `limit` together |
+| GET | `/api/events/:id` | none | Get an active upcoming event for its detail page |
+| GET, PUT | `/api/events/:id/reminder` | logged in | Read or save the user's reminder for an upcoming event |
 | POST | `/api/events` | admin | Create an event |
 | PATCH | `/api/events/:id/status` | admin | Set `isActive` to `true` or `false`; events are not deleted |
 | GET | `/api/admin/events` | admin | List and search all events; supports `q`, `status`, `sort`, `order`, `page`, and `limit` |
@@ -90,11 +94,16 @@ curl -X POST http://localhost:3000/api/auth/login \
 app/
   api/auth/        signup, login, logout, me
    api/events/      public list, admin create, status update
+   api/favourites/  read and save category preferences
+   api/feed/        upcoming events from favourite categories
    api/admin/       searchable, sortable, paginated admin event list
    api/cities/      public event cities
   login/ signup/   auth pages
+   feed/            personalized upcoming events
+   preferences/     favourite category settings
+   events/[id]/     event detail page
    admin/           event table and add-event page (middleware protected)
-components/        auth, event browser/cards, admin table, event form, states
+components/        auth, event browser/cards, feed, preferences, reminders, admin tools, states
 lib/
   db.js            cached MongoDB connection
   jwt.js           sign/verify tokens (also used by middleware)
@@ -115,11 +124,10 @@ Passwords are hashed with bcrypt (10 rounds) before saving, so the real password
 The public events API combines category, city, and text search in one database filter, returning only active upcoming events in date order. The admin list has URL-backed search, status filtering, sortable columns, and pagination, with five rows per page by default. Its responsive add form groups fields, marks required values, scrolls internally with fixed save actions, and confirms creation with a toast while showing the new event first.
 
 **Where were AI tools used?**
-Claude (Anthropic) was used for project planning and initial Day 1 setup/auth guidance. GitHub Copilot was used during Day 2 to help implement and review the event APIs, admin and visitor pages, filters, and pagination, and to update auth feedback and documentation. I reviewed and tested the generated changes and can explain the submitted code.
+Claude (Anthropic) was used for project planning and initial Day 1 setup/auth guidance. GitHub Copilot was used during Days 2–3 to help implement and review event management, filtering, pagination, favourite preferences, My Feed, event details, reminder behavior, and documentation. I reviewed and tested the generated changes and can explain the submitted code.
 
 ## What's left
-- Day 3: favourite-category preferences, My Feed, and Remind me persistence.
 - Day 4: event card themes, stickers, live preview, and saved design.
 - Day 5/submission: complete remaining polish and record the 3–4 minute phone/laptop walkthrough with a short explanation of code choices.
 
-Day 1–2 implementation is committed and pushed to `main`. The admin email/password above are seed defaults; change them in `.env.local` for a private deployment.
+Day 1–2 implementation is committed and pushed to `main`; Day 3 changes may still need to be committed and pushed. The admin email/password above are seed defaults; change them in `.env.local` for a private deployment.

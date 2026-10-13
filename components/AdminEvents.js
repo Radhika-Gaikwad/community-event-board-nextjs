@@ -207,8 +207,8 @@ export default function AdminEvents() {
               </label>
             </div>
 
-            <div className="min-h-0 flex-1 overflow-auto rounded-xl border border-emerald-100 bg-white shadow-sm">
-              <table className="min-w-full text-left text-sm">
+            <div className="min-h-0 flex-1 overflow-y-auto rounded-xl border border-emerald-100 bg-white shadow-sm">
+              <table className="w-full text-left text-sm">
                 <thead className="sticky top-0 z-10 bg-emerald-50 text-xs uppercase tracking-wide text-emerald-900">
                   <tr>
                     {SORT_COLUMNS.map(([field, label]) => (

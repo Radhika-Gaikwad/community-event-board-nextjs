@@ -1,6 +1,7 @@
 "use client";
 
 import { CalendarDays, MapPin } from "lucide-react";
+import Link from "next/link";
 import { formatEventDate, formatPrice } from "@/lib/format";
 
 export default function EventCard({ event }) {
@@ -25,7 +26,7 @@ export default function EventCard({ event }) {
       </div>
 
       <div className="flex flex-1 flex-col gap-2 p-4">
-        <h3 className="line-clamp-2 text-lg font-semibold text-slate-900">{event.title}</h3>
+        <h3 className="line-clamp-2 text-lg font-semibold text-slate-900"><Link href={`/events/${event.id}`} className="hover:text-emerald-800">{event.title}</Link></h3>
         <p className="flex items-center gap-2 text-sm text-slate-600">
           <CalendarDays className="h-4 w-4 shrink-0" aria-hidden="true" />
           {formatEventDate(event.startsAt)}
