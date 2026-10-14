@@ -549,6 +549,90 @@ input {
   animation: auth-toast-enter 180ms ease-out both;
 }
 
+.card-preview {
+  color: #173c32;
+  transition: background-color 320ms ease, color 320ms ease;
+}
+
+.card-preview-garden {
+  background-color: #dcecdf;
+  color: #173c32;
+}
+
+.card-preview-after-dark {
+  background-color: #243a49;
+  color: #fff;
+}
+
+.card-preview-sunshine {
+  background-color: #efd27e;
+  color: #332b19;
+}
+
+.card-preview-image {
+  z-index: -2;
+  object-fit: cover;
+  opacity: 0.22;
+  mix-blend-mode: multiply;
+}
+
+.card-preview-wash {
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  background: currentColor;
+  opacity: 0.04;
+}
+
+.card-sticker {
+  position: absolute;
+  z-index: 20;
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  padding: 5px 7px;
+  border: 1px solid #ffffffa8;
+  border-radius: 999px;
+  background: #ffffffed;
+  box-shadow: 0 4px 12px #0002;
+  color: #173c32;
+  cursor: pointer;
+  animation: card-sticker-pop 220ms cubic-bezier(0.2, 0.8, 0.2, 1.2) both;
+}
+
+.card-sticker span {
+  font-size: 24px;
+  line-height: 1;
+}
+
+.card-sticker-slot-0 {
+  top: 18%;
+  right: 8%;
+}
+
+.card-sticker-slot-1 {
+  top: 47%;
+  right: 11%;
+}
+
+.card-sticker-slot-2 {
+  bottom: 20%;
+  left: 8%;
+}
+
+@keyframes card-sticker-pop {
+  from { opacity: 0; transform: scale(0.65) rotate(-8deg); }
+  to { opacity: 1; transform: scale(1) rotate(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card-preview,
+  .card-sticker {
+    animation: none;
+    transition: none;
+  }
+}
+
 @media (max-width: 760px) {
   .home-page {
     padding: 0 6%;
