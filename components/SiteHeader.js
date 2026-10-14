@@ -1,23 +1,13 @@
-"use client";
-
-import { useEffect, useState } from "react";
+import { cookies } from "next/headers";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
 import { CalendarDays } from "lucide-react";
-import LogoutButton from "./LogoutButton";
+import { COOKIE_NAME, verifyToken } from "@/lib/jwt";
+import SiteNavigation from "./SiteNavigation";
 
-export default function SiteHeader() {
-  const pathname = usePathname();
-  const [user, setUser] = useState(null);
-  const [checked, setChecked] = useState(false);
-
-  useEffect(() => {
-    fetch("/api/auth/me", { cache: "no-store" })
-      .then(async (res) => (res.ok ? (await res.json()).user : null))
-      .then(setUser)
-      .catch(() => setUser(null))
-      .finally(() => setChecked(true));
-  }, []);
+export default async function SiteHeader() {
+  const cookieStore = await cookies();
+  const token = cookieStore.get(COOKIE_NAME)?.value;
+  const user = token ? await verifyToken(token) : null;
 
   return (
     <header className="shrink-0 border-b border-slate-200 bg-white">
@@ -26,32 +16,7 @@ export default function SiteHeader() {
           <CalendarDays className="h-5 w-5 shrink-0" aria-hidden="true" />
           Community Events Board
         </Link>
-        <nav aria-label="Main navigation" className="flex shrink-0 items-center gap-3 text-xs font-semibold sm:gap-5 sm:text-sm">
-          {user ? (
-            <>
-              <Link
-                href="/feed"
-                aria-current={pathname === "/feed" ? "page" : undefined}
-                className={pathname === "/feed" ? "rounded-md border border-emerald-200 bg-emerald-50 px-2.5 py-2 text-emerald-900" : "text-slate-700 hover:text-emerald-800"}
-              >
-                My Feed
-              </Link>
-              <Link
-                href="/preferences"
-                aria-current={pathname === "/preferences" ? "page" : undefined}
-                className={`hidden min-[420px]:inline ${pathname === "/preferences" ? "rounded-md border border-emerald-200 bg-emerald-50 px-2.5 py-2 text-emerald-900" : "text-slate-700 hover:text-emerald-800"}`}
-              >
-                Preferences
-              </Link>
-              <LogoutButton />
-            </>
-          ) : checked ? (
-            <>
-              <Link href="/login" className="text-slate-700 hover:text-emerald-800">Log in</Link>
-              <Link href="/signup" className="rounded-md bg-emerald-800 px-3 py-2 text-white hover:bg-emerald-900">Sign up</Link>
-            </>
-          ) : null}
-        </nav>
+        <SiteNavigation isSignedIn={Boolean(user)} />
       </div>
     </header>
   );
