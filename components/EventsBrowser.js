@@ -25,7 +25,7 @@ export default function EventsBrowser() {
     fetch("/api/cities")
       .then((res) => res.json())
       .then((json) => setCities(json.cities ?? []))
-      .catch(() => {}); // the dropdown just stays empty, the list still works
+      .catch(() => { }); // the dropdown just stays empty, the list still works
   }, []);
 
   // Wait until the user stops typing for 400 ms, then search from page 1
@@ -92,10 +92,9 @@ export default function EventsBrowser() {
   const hasFilters = Boolean(category || city || q);
 
   const chipClass = (active) =>
-    `shrink-0 rounded-full border px-4 py-1.5 text-sm font-medium transition ${
-      active
-        ? "border-indigo-600 bg-indigo-600 text-white"
-        : "border-slate-300 bg-white text-slate-700 hover:border-indigo-300 hover:bg-indigo-50"
+    `shrink-0 rounded-full border px-4 py-1.5 text-sm font-medium transition ${active
+      ? "border-emerald-800 bg-emerald-800 text-white"
+      : "border-slate-300 bg-white text-slate-700 hover:border-emerald-300 hover:bg-emerald-50"
     }`;
 
   return (
@@ -110,7 +109,7 @@ export default function EventsBrowser() {
             onChange={(e) => setQ(e.target.value)}
             placeholder="Search events, e.g. night"
             aria-label="Search events"
-            className="w-full rounded-xl border border-slate-300 bg-white py-2.5 pl-10 pr-3 text-slate-900 outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200"
+            className="w-full rounded-xl border border-slate-300 bg-white py-2.5 pl-10 pr-3 text-slate-900 outline-none focus:border-emerald-600 focus:ring-2 focus:ring-emerald-100"
           />
         </div>
 
@@ -127,7 +126,7 @@ export default function EventsBrowser() {
             value={city}
             onChange={(e) => changeCity(e.target.value)}
             aria-label="Filter by city"
-            className="rounded-xl border border-slate-300 bg-white px-3 py-2 text-slate-900 outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200"
+            className="rounded-xl border border-slate-300 bg-white px-3 py-2 text-slate-900 outline-none focus:border-emerald-600 focus:ring-2 focus:ring-emerald-100"
           >
             <option value="">All cities</option>
             {cities.map((c) => (
@@ -150,7 +149,7 @@ export default function EventsBrowser() {
         ) : data.items.length === 0 ? (
           hasFilters ? (
             <EmptyState title="No events match your filters" message="Try a different category or city, or search for something else.">
-              <button onClick={clearFilters} className="rounded-lg bg-indigo-600 px-4 py-2 text-sm font-semibold text-white hover:bg-indigo-700">
+              <button onClick={clearFilters} className="rounded-lg bg-emerald-800 px-4 py-2 text-sm font-semibold text-white hover:bg-emerald-900">
                 Clear filters
               </button>
             </EmptyState>

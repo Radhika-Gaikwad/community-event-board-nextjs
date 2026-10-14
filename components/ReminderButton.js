@@ -61,7 +61,7 @@ export default function ReminderButton({ eventId }) {
     }
   }
 
-  if (loading) return <div role="status" className="inline-flex min-h-11 items-center gap-2 text-sm text-slate-500"><LoaderCircle size={17} className="animate-spin" /> Checking reminder...</div>;
+  if (loading) return <div role="status" className="inline-flex min-h-11 items-center gap-2 text-sm text-slate-500"><LoaderCircle size={17} className="animate-spin text-emerald-700" /> Checking reminder...</div>;
   if (requiresLogin) {
     return <Link href={`/login?next=${encodeURIComponent(`/events/${eventId}`)}`} className="inline-flex min-h-11 items-center gap-2 rounded-md bg-emerald-800 px-4 text-sm font-semibold text-white hover:bg-emerald-900"><Bell size={17} /> Log in to remind me</Link>;
   }

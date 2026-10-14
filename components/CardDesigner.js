@@ -13,7 +13,7 @@ const STICKER_POSITIONS = ["card-sticker-slot-0", "card-sticker-slot-1", "card-s
 export default function CardDesigner({ event }) {
   const [theme, setTheme] = useState(DEFAULT_CARD_DESIGN.theme);
   const [stickers, setStickers] = useState(DEFAULT_CARD_DESIGN.stickers);
-  const [savedDesign, setSavedDesign] = useState(DEFAULT_CARD_DESIGN);
+  const [savedDesign, setSavedDesign] = useState(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [requiresLogin, setRequiresLogin] = useState(false);
@@ -44,7 +44,7 @@ export default function CardDesigner({ event }) {
 
   useEffect(() => { loadDesign(); }, [loadDesign]);
 
-  const hasChanges = theme !== savedDesign.theme || stickers.join("|") !== savedDesign.stickers.join("|");
+  const hasChanges = savedDesign !== null && (theme !== savedDesign.theme || stickers.join("|") !== savedDesign.stickers.join("|"));
 
   function toggleSticker(stickerId) {
     setMessage("");
@@ -95,7 +95,7 @@ export default function CardDesigner({ event }) {
           </div>
         </div>
         <span className={`rounded-full px-3 py-1 text-xs font-semibold ${hasChanges ? "bg-amber-50 text-amber-800" : "bg-emerald-50 text-emerald-800"}`}>
-          {hasChanges ? "Unsaved changes" : "Saved"}
+          {requiresLogin ? "Sign in to save" : hasChanges ? "Unsaved changes" : "Saved"}
         </span>
       </div>
 
@@ -105,7 +105,7 @@ export default function CardDesigner({ event }) {
         </div>
       ) : (
         <div className="grid gap-7 lg:grid-cols-[minmax(0,1fr)_300px] lg:items-start">
-          <div className={`card-preview card-preview-${theme} relative isolate aspect-[1.35/1] min-h-64 overflow-hidden rounded-md sm:min-h-80`} aria-live="polite">
+          <div className={`card-preview card-preview-${theme} relative isolate w-full min-w-0 aspect-[1.35/1] overflow-hidden rounded-md`} aria-live="polite">
             {event.imageUrl && <Image src={event.imageUrl} alt="" fill unoptimized sizes="(max-width: 1024px) 100vw, 760px" className="card-preview-image" />}
             <div className="card-preview-wash" />
             <div className="relative z-10 flex h-full flex-col justify-between p-5 sm:p-8">

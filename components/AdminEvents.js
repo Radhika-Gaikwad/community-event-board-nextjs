@@ -194,31 +194,89 @@ export default function AdminEvents() {
           <div className="flex min-h-0 flex-1 flex-col">
             <div className="mb-2 flex shrink-0 flex-wrap items-center justify-between gap-2 text-sm text-slate-600">
               <p>{total} {total === 1 ? "event" : "events"}</p>
-              <label className="flex items-center gap-2">
-                <span>Rows</span>
-                <select
-                  value={query.limit}
-                  onChange={(event) => updateQuery({ limit: Number(event.target.value), page: 1 })}
-                  className="rounded-md border border-slate-300 bg-white px-2 py-1.5 text-slate-800 outline-none focus:border-emerald-600 focus:ring-2 focus:ring-emerald-100"
-                  aria-label="Rows per page"
-                >
-                  {[5, 10, 20].map((count) => <option key={count} value={count}>{count}</option>)}
-                </select>
-              </label>
+              <div className="flex flex-wrap items-center gap-3">
+                <label className="flex items-center gap-2">
+                  <span>Sort by</span>
+                  <select
+                    value={query.sort}
+                    onChange={(event) => updateQuery({ sort: event.target.value, page: 1 })}
+                    className="max-w-36 rounded-md border border-slate-300 bg-white px-2 py-1.5 text-slate-800 outline-none focus:border-emerald-600 focus:ring-2 focus:ring-emerald-100"
+                    aria-label="Sort events by"
+                  >
+                    {SORT_COLUMNS.map(([field, label]) => <option key={field} value={field}>{label}</option>)}
+                  </select>
+                </label>
+                <button type="button" onClick={() => updateQuery({ order: query.order === "asc" ? "desc" : "asc", page: 1 })} className="rounded-md border border-slate-300 bg-white px-2 py-1.5 text-xs font-semibold text-slate-700 hover:bg-slate-50" aria-label={`Sort ${query.order === "asc" ? "descending" : "ascending"}`}>
+                  {query.order === "asc" ? "Ascending" : "Descending"}
+                </button>
+                <label className="flex items-center gap-2">
+                  <span>Rows</span>
+                  <select
+                    value={query.limit}
+                    onChange={(event) => updateQuery({ limit: Number(event.target.value), page: 1 })}
+                    className="rounded-md border border-slate-300 bg-white px-2 py-1.5 text-slate-800 outline-none focus:border-emerald-600 focus:ring-2 focus:ring-emerald-100"
+                    aria-label="Rows per page"
+                  >
+                    {[5, 10, 20].map((count) => <option key={count} value={count}>{count}</option>)}
+                  </select>
+                </label>
+              </div>
             </div>
 
-            <div className="min-h-0 flex-1 overflow-y-auto rounded-xl border border-emerald-100 bg-white shadow-sm">
-              <table className="w-full text-left text-sm">
+            <div className="grid gap-3 md:hidden">
+              {events.map((event) => {
+                const isPast = new Date(event.startsAt) < new Date();
+                return (
+                  <article key={event.id} className="min-w-0 rounded-lg border border-emerald-100 bg-white p-3 shadow-sm">
+                    <div className="flex min-w-0 items-start justify-between gap-3">
+                      <div className="min-w-0">
+                        <h2 className="break-words font-semibold text-slate-900">{event.title}</h2>
+                        <p className="mt-0.5 break-words text-xs text-slate-500">{event.description}</p>
+                      </div>
+                      <span className={`shrink-0 rounded-full px-2 py-1 text-[11px] font-semibold ${event.isActive ? "bg-emerald-100 text-emerald-800" : "bg-slate-100 text-slate-600"}`}>
+                        {event.isActive ? "Active" : "Inactive"}
+                      </span>
+                    </div>
+                    <dl className="mt-3 grid grid-cols-2 gap-x-3 gap-y-2 text-xs text-slate-600">
+                      <div><dt className="font-semibold text-slate-500">Category</dt><dd className="break-words">{event.category}</dd></div>
+                      <div><dt className="font-semibold text-slate-500">City</dt><dd className="break-words">{event.city}</dd></div>
+                      <div><dt className="font-semibold text-slate-500">Date</dt><dd className="break-words">{formatEventDate(event.startsAt)}{isPast ? " · Past" : ""}</dd></div>
+                      <div><dt className="font-semibold text-slate-500">Price</dt><dd>{formatPrice(event.price)}</dd></div>
+                      <div className="col-span-2"><dt className="font-semibold text-slate-500">Added</dt><dd>{formatEventDate(event.createdAt)}</dd></div>
+                    </dl>
+                    <button
+                      onClick={() => toggle(event)}
+                      disabled={busyId === event.id}
+                      className="mt-3 min-h-9 w-full rounded-md border border-emerald-200 px-3 text-xs font-semibold text-emerald-800 transition hover:border-emerald-400 hover:bg-emerald-50 disabled:cursor-wait disabled:opacity-50"
+                    >
+                      {busyId === event.id ? "Saving..." : event.isActive ? "Deactivate event" : "Activate event"}
+                    </button>
+                  </article>
+                );
+              })}
+            </div>
+
+            <div className="hidden min-h-0 flex-1 overflow-y-auto overflow-x-hidden rounded-xl border border-emerald-100 bg-white shadow-sm md:block">
+              <table className="w-full table-fixed text-left text-sm">
+                <colgroup>
+                  <col className="w-[27%]" />
+                  <col className="w-[11%]" />
+                  <col className="w-[11%]" />
+                  <col className="w-[17%]" />
+                  <col className="w-[10%]" />
+                  <col className="w-[10%]" />
+                  <col className="w-[14%]" />
+                </colgroup>
                 <thead className="sticky top-0 z-10 bg-emerald-50 text-xs uppercase tracking-wide text-emerald-900">
                   <tr>
-                    {SORT_COLUMNS.map(([field, label]) => (
+                    {SORT_COLUMNS.filter(([field]) => field !== "createdAt").map(([field, label]) => (
                       <th
                         key={field}
                         scope="col"
                         aria-sort={query.sort === field ? (query.order === "asc" ? "ascending" : "descending") : "none"}
-                        className="whitespace-nowrap px-4 py-3 font-semibold"
+                        className="px-2 py-3 font-semibold sm:px-3"
                       >
-                        <button onClick={() => sortBy(field)} className="inline-flex items-center gap-1.5 hover:text-emerald-700">
+                        <button onClick={() => sortBy(field)} className="inline-flex max-w-full items-center gap-1 hover:text-emerald-700 sm:gap-1.5">
                           {label}
                           {query.sort === field
                             ? query.order === "asc" ? <ArrowUp size={14} aria-hidden="true" /> : <ArrowDown size={14} aria-hidden="true" />
@@ -234,28 +292,28 @@ export default function AdminEvents() {
                     const isPast = new Date(event.startsAt) < new Date();
                     return (
                       <tr key={event.id} className="hover:bg-emerald-50/70">
-                        <td className="max-w-64 px-4 py-2.5">
+                        <td className="min-w-0 px-2 py-2.5 sm:px-3">
                           <p className="truncate font-semibold text-slate-900">{event.title}</p>
                           <p className="mt-0.5 line-clamp-1 text-xs text-slate-500">{event.description}</p>
+                          <p className="mt-0.5 text-[10px] text-slate-400">Added {formatEventDate(event.createdAt)}</p>
                         </td>
-                        <td className="whitespace-nowrap px-4 py-2.5 text-slate-600">{event.category}</td>
-                        <td className="whitespace-nowrap px-4 py-2.5 text-slate-600">{event.city}</td>
-                        <td className="whitespace-nowrap px-4 py-2.5 text-slate-600">
+                        <td className="break-words px-2 py-2.5 text-slate-600 sm:px-3">{event.category}</td>
+                        <td className="break-words px-2 py-2.5 text-slate-600 sm:px-3">{event.city}</td>
+                        <td className="break-words px-2 py-2.5 text-slate-600 sm:px-3">
                           {formatEventDate(event.startsAt)}
-                          {isPast && <span className="ml-2 rounded-full bg-amber-100 px-2 py-0.5 text-xs font-medium text-amber-800">Past</span>}
+                          {isPast && <span className="mt-1 inline-block rounded-full bg-amber-100 px-2 py-0.5 text-[10px] font-medium text-amber-800">Past</span>}
                         </td>
-                        <td className="whitespace-nowrap px-4 py-2.5 text-slate-600">{formatEventDate(event.createdAt)}</td>
-                        <td className="whitespace-nowrap px-4 py-2.5 font-medium text-slate-800">{formatPrice(event.price)}</td>
-                        <td className="px-4 py-2.5">
+                        <td className="break-words px-2 py-2.5 font-medium text-slate-800 sm:px-3">{formatPrice(event.price)}</td>
+                        <td className="px-2 py-2.5 sm:px-3">
                           <span className={`rounded-full px-2.5 py-1 text-xs font-semibold ${event.isActive ? "bg-emerald-100 text-emerald-800" : "bg-slate-100 text-slate-600"}`}>
                             {event.isActive ? "Active" : "Inactive"}
                           </span>
                         </td>
-                        <td className="whitespace-nowrap px-4 py-2.5 text-right">
+                        <td className="px-2 py-2.5 text-right sm:px-3">
                           <button
                             onClick={() => toggle(event)}
                             disabled={busyId === event.id}
-                            className="rounded-md border border-emerald-200 px-3 py-1.5 text-xs font-semibold text-emerald-800 transition hover:border-emerald-400 hover:bg-emerald-50 disabled:cursor-wait disabled:opacity-50"
+                            className="min-h-8 max-w-full whitespace-normal break-words rounded-md border border-emerald-200 px-2 py-1 text-[10px] font-semibold leading-tight text-emerald-800 transition hover:border-emerald-400 hover:bg-emerald-50 disabled:cursor-wait disabled:opacity-50 sm:px-3 sm:text-xs"
                           >
                             {busyId === event.id ? "Saving..." : event.isActive ? "Deactivate" : "Activate"}
                           </button>

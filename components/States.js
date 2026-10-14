@@ -3,7 +3,7 @@ import { CalendarX2, TriangleAlert } from "lucide-react";
 export function Spinner({ label = "Loading..." }) {
   return (
     <div role="status" className="flex items-center justify-center gap-3 py-16 text-slate-600">
-      <span className="h-5 w-5 animate-spin rounded-full border-2 border-indigo-200 border-t-indigo-600" />
+      <span className="h-5 w-5 animate-spin rounded-full border-2 border-emerald-100 border-t-emerald-700" />
       <span>{label}</span>
     </div>
   );

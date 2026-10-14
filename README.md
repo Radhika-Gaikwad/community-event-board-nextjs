@@ -1,7 +1,7 @@
 # Community Events Board
 
 A small app where an admin posts local events and visitors browse them.
-Built with Next.js (App Router) for an assignment. Day 1 authentication, Day 2 event management/listing, and Day 3 favourites, feed, and reminders are implemented.
+Built with Next.js (App Router) for an assignment. Days 1–4 cover authentication, event management, personalized feeds, reminders, and saved event-card designs.
 
 ## Tech stack
 - Next.js 15 (App Router, JavaScript)
@@ -16,27 +16,27 @@ Built with Next.js (App Router) for an assignment. Day 1 authentication, Day 2 e
 ## Setup (about 5 minutes)
 1. Clone the repo and install packages:
 ```bash
-   git clone <repo-url>
-   cd events-board
-   npm install
+git clone <repo-url>
+cd events-board
+npm install
 ```
-2. Create your environment file:
+2. Create your local environment file:
 ```bash
-   cp .env.example .env.local
+cp .env.example .env.local
 ```
-3. Start MongoDB, using either option:
-   - **Docker:** `docker compose up -d` (the default `MONGODB_URI` already points to it)
-   - **Atlas:** put your connection string in `MONGODB_URI` in `.env.local`
-4. Set a secret for login tokens. Generate one and paste it as `JWT_SECRET` in `.env.local`:
+3. Start MongoDB with Docker, or put your Atlas connection string in `MONGODB_URI` in `.env.local`:
 ```bash
-   node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
+docker compose up -d
 ```
-5. Add sample data (15 events and the admin user), then start the app:
+4. Set `JWT_SECRET` to a long random value. You can generate one with:
 ```bash
-   npm run seed
-   npm run dev
+node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
 ```
-6. Open http://localhost:3000
+5. Seed the sample events/admin, start the app, then open http://localhost:3000:
+```bash
+npm run seed
+npm run dev
+```
 
 ## Environment variables
 | Variable | Purpose |
@@ -77,6 +77,7 @@ Auth works with an httpOnly cookie (web) or an `Authorization: Bearer <token>` h
 | GET | `/api/events` | none | List active upcoming events, nearest first; supports `category`, `city`, `q`, `page`, and `limit` together |
 | GET | `/api/events/:id` | none | Get an active upcoming event for its detail page |
 | GET, PUT | `/api/events/:id/reminder` | logged in | Read or save the user's reminder for an upcoming event |
+| GET, PUT | `/api/events/:id/card` | logged in | Read or save the user's card theme and stickers for an event |
 | POST | `/api/events` | admin | Create an event |
 | PATCH | `/api/events/:id/status` | admin | Set `isActive` to `true` or `false`; events are not deleted |
 | GET | `/api/admin/events` | admin | List and search all events; supports `q`, `status`, `sort`, `order`, `page`, and `limit` |
@@ -93,7 +94,7 @@ curl -X POST http://localhost:3000/api/auth/login \
 ```
 app/
   api/auth/        signup, login, logout, me
-   api/events/      public list, admin create, status update
+   api/events/      public list, details, status, reminders, card designs
    api/favourites/  read and save category preferences
    api/feed/        upcoming events from favourite categories
    api/admin/       searchable, sortable, paginated admin event list
@@ -124,10 +125,9 @@ Passwords are hashed with bcrypt (10 rounds) before saving, so the real password
 The public events API combines category, city, and text search in one database filter, returning only active upcoming events in date order. The admin list has URL-backed search, status filtering, sortable columns, and pagination, with five rows per page by default. Its responsive add form groups fields, marks required values, scrolls internally with fixed save actions, and confirms creation with a toast while showing the new event first.
 
 **Where were AI tools used?**
-Claude (Anthropic) was used for project planning and initial Day 1 setup/auth guidance. GitHub Copilot was used during Days 2–3 to help implement and review event management, filtering, pagination, favourite preferences, My Feed, event details, reminder behavior, and documentation. I reviewed and tested the generated changes and can explain the submitted code.
+Claude (Anthropic) was used for project planning and initial Day 1 setup/auth guidance. GitHub Copilot was used during Days 2–4 to help implement and review event management, filtering, pagination, favourite preferences, My Feed, reminders, the event-card designer, responsive polish, and documentation. I reviewed and tested the generated changes and can explain the submitted code.
 
 ## What's left
-- Day 4: event card themes, stickers, live preview, and saved design.
-- Day 5/submission: complete remaining polish and record the 3–4 minute phone/laptop walkthrough with a short explanation of code choices.
+- Day 5/submission: final review, record the 3–4 minute phone/laptop walkthrough, and explain two or three code choices.
 
-Day 1–2 implementation is committed and pushed to `main`; Day 3 changes may still need to be committed and pushed. The admin email/password above are seed defaults; change them in `.env.local` for a private deployment.
+The admin email/password above are seed defaults; change them in `.env.local` for a private deployment. Never commit `.env.local` or share its values.

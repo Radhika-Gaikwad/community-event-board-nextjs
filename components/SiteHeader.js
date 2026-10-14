@@ -2,10 +2,12 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { CalendarDays } from "lucide-react";
 import LogoutButton from "./LogoutButton";
 
 export default function SiteHeader() {
+  const pathname = usePathname();
   const [user, setUser] = useState(null);
   const [checked, setChecked] = useState(false);
 
@@ -27,8 +29,20 @@ export default function SiteHeader() {
         <nav aria-label="Main navigation" className="flex shrink-0 items-center gap-3 text-xs font-semibold sm:gap-5 sm:text-sm">
           {user ? (
             <>
-              <Link href="/feed" className="text-slate-700 hover:text-emerald-800">My Feed</Link>
-              <Link href="/preferences" className="hidden text-slate-700 hover:text-emerald-800 min-[420px]:inline">Preferences</Link>
+              <Link
+                href="/feed"
+                aria-current={pathname === "/feed" ? "page" : undefined}
+                className={pathname === "/feed" ? "rounded-md border border-emerald-200 bg-emerald-50 px-2.5 py-2 text-emerald-900" : "text-slate-700 hover:text-emerald-800"}
+              >
+                My Feed
+              </Link>
+              <Link
+                href="/preferences"
+                aria-current={pathname === "/preferences" ? "page" : undefined}
+                className={`hidden min-[420px]:inline ${pathname === "/preferences" ? "rounded-md border border-emerald-200 bg-emerald-50 px-2.5 py-2 text-emerald-900" : "text-slate-700 hover:text-emerald-800"}`}
+              >
+                Preferences
+              </Link>
               <LogoutButton />
             </>
           ) : checked ? (

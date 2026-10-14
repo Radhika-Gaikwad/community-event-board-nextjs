@@ -7,7 +7,7 @@ import { formatEventDate, formatPrice } from "@/lib/format";
 export default function EventCard({ event }) {
   return (
     <article className="flex flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition hover:shadow-md">
-      <div className="relative aspect-video bg-indigo-50">
+      <div className="relative aspect-video bg-emerald-100">
         {event.imageUrl && (
           // eslint-disable-next-line @next/next/no-img-element
           <img
@@ -20,7 +20,7 @@ export default function EventCard({ event }) {
             }}
           />
         )}
-        <span className="absolute left-3 top-3 rounded-full bg-white/90 px-2.5 py-1 text-xs font-semibold text-indigo-700">
+        <span className="absolute left-3 top-3 rounded-full bg-white/90 px-2.5 py-1 text-xs font-semibold text-emerald-800">
           {event.category}
         </span>
       </div>
