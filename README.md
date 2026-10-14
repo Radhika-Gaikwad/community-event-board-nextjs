@@ -1,5 +1,20 @@
 # Community Events Board
 
+
+## Demo video:
+[Watch the walkthrough]:https://drive.google.com/file/d/1kgT-tO3ZwAu62GTJf6VwCTcmEhNuqtoq/view
+
+
+## demo Url:(deployed)
+https://community-event-board-nextjs-vp1l.vercel.app/
+
+
+## Admin Credentials: (Dummy)
+ADMIN_EMAIL=admin@example.com
+ADMIN_PASSWORD=Admin@123
+
+
+
 A small app where an admin posts local events and visitors browse them.
 Built with Next.js (App Router) for an assignment. Days 1–4 cover authentication, event management, personalized feeds, reminders, and saved event-card designs.
 
@@ -128,6 +143,7 @@ The public events API combines category, city, and text search in one database f
 Claude (Anthropic) was used for project planning and initial Day 1 setup/auth guidance. GitHub Copilot was used during Days 2–4 to help implement and review event management, filtering, pagination, favourite preferences, My Feed, reminders, the event-card designer, responsive polish, and documentation. I reviewed and tested the generated changes and can explain the submitted code.
 
 ## What's left
-- Day 5/submission: final review, record the 3–4 minute phone/laptop walkthrough, and explain two or three code choices.
 
 The admin email/password above are seed defaults; change them in `.env.local` for a private deployment. Never commit `.env.local` or share its values.
+
+7. If port 3000 is busy, Next.js starts on the next free port. Open the URL printed in the terminal.
